@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Local Chat</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+
+    <div id="chat">
+      <div id="chat-header">
+        <div class="title">💬 Local Chat</div>
+        <div class="user-info">
+          <span>You are <strong id="displayName">...</strong></span>
+          <button id="renameBtn" onclick="openRename()">✏️ Rename</button>
+        </div>
+      </div>
+      <div id="log"></div>
+      <div id="input-bar">
+        <input
+          id="msgInput"
+          type="text"
+          placeholder="Type a message..."
+          maxlength="500"
+        />
+        <button onclick="sendChat()">Send</button>
+      </div>
+    </div>
+
+    <div id="renameModal">
+      <div id="renameBox">
+        <h3>✏️ Set a new name</h3>
+        <input
+          id="renameInput"
+          type="text"
+          placeholder="Enter new name..."
+          maxlength="20"
+        />
+        <div class="modal-buttons">
+          <button id="cancelRename" onclick="closeRename()">Cancel</button>
+          <button id="confirmRename" onclick="submitRename()">Save</button>
+        </div>
+      </div>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
