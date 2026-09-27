@@ -9,6 +9,7 @@
     "dev:server": "tsx --watch server/src/index.ts",
     "build": "tsc -b && vite build",
     "build:server": "tsc --noEmit -p server/tsconfig.json",
+    "start": "tsx server/src/index.ts",
     "lint": "eslint .",
     "preview": "vite preview"
   },

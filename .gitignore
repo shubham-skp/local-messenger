@@ -11,6 +11,7 @@ node_modules
 dist
 dist-ssr
 *.local
+*.tsbuildinfo
 
 # Server runtime history (local chat data, not source)
 server/data/chat_history.json
