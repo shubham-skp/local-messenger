@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+# Server runtime history (local chat data, not source)
+server/data/chat_history.json
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
