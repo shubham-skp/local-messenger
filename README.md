@@ -1,75 +1,72 @@
-# React + TypeScript + Vite
+# local-messenger
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+LAN chat app. React + TypeScript + Tailwind client, Express + Socket.io server.
 
-Currently, two official plugins are available:
+## Requirements
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Node 20+, npm.
 
-## React Compiler
+## Install
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+## Run (development)
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Starts server (`:3000`) and client (`:5173`) together:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```bash
+npm run dev
 ```
+
+Open in two browsers to test:
+
+- `http://localhost:5173` (same machine)
+- `http://<lan-ip>:5173` (other devices on the same network)
+
+The server logs its LAN address on startup. The Vite dev server proxies
+`/socket.io` to `http://localhost:3000`, so no extra config is needed.
+
+Individual processes:
+
+```bash
+npm run dev:server
+npm run dev:client
+```
+
+## Run (production)
+
+Build the client, then start the server (it serves `dist/` itself):
+
+```bash
+npm run build
+npm start
+```
+
+Open `http://<lan-ip>:3000`. `PORT` and `HOST` env vars are supported.
+
+## Health check
+
+```bash
+curl http://localhost:3000/api/health
+```
+
+## How it works
+
+- `server/src/index.ts` — Express + HTTP + Socket.io, typed events, join/leave
+  system messages, rename/chat handlers, JSON history in
+  `server/data/chat_history.json` (gitignored, capped at 200).
+- `shared/chat.ts` — shared Socket.io event contract and limits.
+- `src/lib/socket.ts` — typed `socket.io-client` factory.
+- `src/hooks/useChat.ts` — connection state, message list, `send`/`rename`.
+- `src/components/` — `ChatHeader`, `MessageList`, `ChatInput`, `RenameModal`.
+
+## Scripts
+
+| Script         | Purpose                              |
+| -------------- | ------------------------------------ |
+| `npm run dev`  | server + client together             |
+| `npm run start`| production server (serves `dist/`)   |
+| `npm run build`| typecheck + production client build  |
+| `npm run lint` | eslint                               |
